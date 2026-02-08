@@ -1,3 +1,5 @@
+[![Release](https://github.com/vicentefelipechile/vrchat-cachecleaner/actions/workflows/release.yml/badge.svg)](https://github.com/vicentefelipechile/vrchat-cachecleaner/actions/workflows/release.yml)
+
 # VRChat Cache Cleaner
 
 Una herramienta ligera y eficiente escrita en Rust que mantiene tu disco limpio borrando automáticamente la caché de VRChat cada vez que cierras el juego.
