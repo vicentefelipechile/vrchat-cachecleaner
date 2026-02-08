@@ -2,8 +2,10 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*' # Triggers on tags like v1.0.0, v0.2.0, etc.
+    branches:
+      - main
+    paths:
+      - 'Cargo.toml'
 
 env:
   CARGO_TERM_COLOR: always
