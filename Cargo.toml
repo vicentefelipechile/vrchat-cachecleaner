@@ -1,0 +1,13 @@
+[package]
+name = "vrchat-cachecleaner"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.101"
+auto-launch = "0.6.0"
+directories = "6.0.0"
+sysinfo = "0.38.1"
+
+[build-dependencies]
+winres = "0.1.12"
