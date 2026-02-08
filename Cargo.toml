@@ -11,5 +11,9 @@ auto-launch = "0.6.0"
 directories = "6.0.0"
 sysinfo = "0.38.1"
 
+
 [build-dependencies]
 winres = "0.1.12"
+
+[target.'cfg(windows)'.dependencies]
+winreg = "0.52"

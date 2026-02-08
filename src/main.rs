@@ -4,23 +4,45 @@ use auto_launch::AutoLaunchBuilder;
 use std::env;
 use std::{thread, time};
 use sysinfo::{ProcessesToUpdate, System};
+use winreg::RegKey;
+use winreg::enums::*;
 
 fn setup_auto_launch() {
     let current_exe = env::current_exe().unwrap();
+    let current_exe_str = current_exe.to_str().unwrap();
+
     let auto = AutoLaunchBuilder::new()
         .set_app_name("VRChatCacheCleaner")
-        .set_app_path(current_exe.to_str().unwrap())
+        .set_app_path(current_exe_str)
         .build()
         .unwrap();
 
-    if let Ok(enabled) = auto.is_enabled() {
-        if !enabled {
-            if let Err(e) = auto.enable() {
-                eprintln!("Failed to enable auto-launch: {}", e);
-            } else {
-                println!("Auto-launch enabled.");
-            }
+    // Check existing registry entry
+    let hkcu = RegKey::predef(HKEY_CURRENT_USER);
+    let path = std::path::Path::new("Software")
+        .join("Microsoft")
+        .join("Windows")
+        .join("CurrentVersion")
+        .join("Run");
+
+    let should_enable = if let Ok(key) = hkcu.open_subkey(&path) {
+        if let Ok(value) = key.get_value::<String, _>("VRChatCacheCleaner") {
+            value != current_exe_str
+        } else {
+            true
         }
+    } else {
+        true
+    };
+
+    if should_enable {
+        if let Err(e) = auto.enable() {
+            eprintln!("Failed to update auto-launch: {}", e);
+        } else {
+            println!("Auto-launch updated to current path.");
+        }
+    } else {
+        println!("Auto-launch already set correctly.");
     }
 }
 
