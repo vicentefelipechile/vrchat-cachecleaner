@@ -1,6 +1,10 @@
+#![windows_subsystem = "windows"]
+
 mod cleaner;
 
 use auto_launch::AutoLaunchBuilder;
+use notify_rust::Notification;
+use single_instance::SingleInstance;
 use std::env;
 use std::{thread, time};
 use sysinfo::{ProcessesToUpdate, System};
@@ -47,7 +51,27 @@ fn setup_auto_launch() {
 }
 
 fn main() {
+    let instance = SingleInstance::new("vrchat-cachecleaner-lock").unwrap();
+    if !instance.is_single() {
+        if let Err(e) = Notification::new()
+            .summary("VRChat Cache Cleaner")
+            .body("App is already running.")
+            .show()
+        {
+            eprintln!("Failed to show notification: {}", e);
+        }
+        return;
+    }
+
     setup_auto_launch();
+
+    if let Err(e) = Notification::new()
+        .summary("VRChat Cache Cleaner")
+        .body("Cleaner is running in the background.")
+        .show()
+    {
+        eprintln!("Failed to show notification: {}", e);
+    }
 
     let mut system = System::new_all();
     let mut was_running = false;
